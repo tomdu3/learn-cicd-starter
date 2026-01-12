@@ -26,4 +26,7 @@ You do *not* need to set up a database or any interactivity on the webpage yet. 
 
 Tom's version of Boot.dev's Notely app.
 
+&copy; Tom Dukez 2026.
+
+
 
