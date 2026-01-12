@@ -8,6 +8,10 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,23 +24,15 @@ jobs:
       - name: Build app
         run: ./scripts/buildprod.sh
 
-  job_id:
-    name: Authenticate with Google Cloud
-    permissions:
-      contents: "read"
-      id-token: "write"
-    runs-on: ubuntu-latest
-    steps:
       - id: "auth"
+        name: Authenticate with Google Cloud
         uses: "google-github-actions/auth@v2"
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
       - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v3"
-
-      - name: "Use gcloud CLI"
-        run: "gcloud info"
+        uses: "google-github-actions/setup-gcloud@v2" # Updated version
 
       - name: "Build the Docker image"
-        run: gcloud builds submit --tag REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG .
+        # The "." at the end tells gcloud to look for the Dockerfile in the current directory
+        run: gcloud builds submit --tag europe-west10-docker.pkg.dev/notely-484119/notely-ar-repo/my-app:latest .
